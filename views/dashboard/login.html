@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学IT - 后台管理系统</title>
+    <?php include '/views/common/css.html'?>
+</head>
+<body>
+    <!-- 登录 -->
+    <div class="login">
+        <div class="login-wrap">
+            <div class="avatar">
+                <img src="/views/public/uploads/monkey.png" class="img-circle" alt="">
+            </div>
+            <form id='formLogin' class="col-md-offset-1 col-md-10">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    <input type="text" name='tc_name' class="form-control" placeholder="用户名">
+                </div>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">
+                        <i class="fa fa-key"></i>
+                    </span>
+                    <input type="password" name='tc_pass' class="form-control" placeholder="密码">
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">登 录</button>
+            </form>
+        </div>
+    </div>
+
+    <?php include '/views/common/script.html'?>
+    <script>
+        /*
+        * 1.注册submit的点击事件，用数据序列化取得tc_name和tc_avatar
+        * 2.请求ajax数据
+        * 3.账户密码正确后登陆到index页面
+        * */
+        $('#formLogin').submit(function(){
+            var data=$(this).serializeArray();
+            console.log(data);
+            $.ajax({
+                type:'post',
+                url:'/api/login',
+                data:data,
+                success:function(info){
+                    if(info.code==200){
+                        var cookie =JSON.stringify(info.result);
+                        $.cookie('cookie',cookie);
+                        location.href='/index';
+                    }
+                },
+                error:function(errInfo){
+                    alert('你输入的密码或账号有误');
+                }
+            })
+            return false;//注意return false防止刷新
+        })
+    </script>
+</body>
+</html>
